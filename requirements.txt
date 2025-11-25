@@ -1,0 +1,26 @@
+# Data manipulation
+pandas==2.1.4
+numpy==1.26.2
+
+# Data collection
+yfinance==0.2.33
+requests==2.31.0
+praw==7.7.1
+beautifulsoup4==4.12.2
+sec-api==1.0.17
+
+# Utilities
+python-dotenv==1.0.0
+tenacity==8.2.3
+
+# Analysis & visualization
+scipy==1.11.4
+matplotlib==3.8.2
+seaborn==0.13.0
+
+# Jupyter
+jupyter==1.0.0
+ipykernel==6.27.1
+
+# Database
+# sqlite3  # Built into Python, no install needed

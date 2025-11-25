@@ -1,0 +1,27 @@
+
+# Environment
+.env
+venv/
+env/
+*.pyc
+__pycache__/
+
+# Data files
+data/raw/*
+data/processed/*
+data/database/*.db
+!data/raw/.gitkeep
+!data/processed/.gitkeep
+
+# Jupyter
+.ipynb_checkpoints/
+*.ipynb_checkpoints
+
+# IDE
+.vscode/
+.idea/
+*.swp
+
+# OS
+.DS_Store
+Thumbs.db
