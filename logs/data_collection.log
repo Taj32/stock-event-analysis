@@ -1,0 +1,93 @@
+2025-11-27 16:35:00,956 - __main__ - INFO - Processing AAPL (1/3)
+2025-11-27 16:35:00,957 - utils.error_handler - INFO - Starting fetch_historical_prices with args=(<__main__.StockPriceCollector object at 0x000002452248E5A0>, 'AAPL'), kwargs=[]
+2025-11-27 16:35:00,957 - __main__ - INFO - Fetching prices for AAPL from 2023-01-01 to 2024-11-01
+2025-11-27 16:35:03,113 - __main__ - INFO - Successfully fetched 461 days of price data for AAPL
+2025-11-27 16:35:03,113 - utils.error_handler - INFO - fetch_historical_prices completed successfully in 2.16s
+2025-11-27 16:35:03,118 - __main__ - INFO - Saved price data to data\raw\prices\AAPL_prices.csv
+2025-11-27 16:35:03,118 - utils.error_handler - INFO - Starting fetch_company_info with args=(<__main__.StockPriceCollector object at 0x000002452248E5A0>, 'AAPL'), kwargs=[]
+2025-11-27 16:35:03,118 - __main__ - INFO - Fetching company info for AAPL
+2025-11-27 16:35:03,327 - __main__ - INFO - Successfully fetched info for AAPL
+2025-11-27 16:35:03,328 - utils.error_handler - INFO - fetch_company_info completed successfully in 0.21s
+2025-11-27 16:35:03,333 - __main__ - INFO - Saved company info to data\raw\prices\AAPL_info.json
+2025-11-27 16:35:03,334 - __main__ - INFO - Processing MSFT (2/3)
+2025-11-27 16:35:04,914 - utils.error_handler - INFO - Starting fetch_historical_prices with args=(<__main__.StockPriceCollector object at 0x000002452248E5A0>, 'MSFT'), kwargs=[]
+2025-11-27 16:35:04,915 - __main__ - INFO - Fetching prices for MSFT from 2023-01-01 to 2024-11-01
+2025-11-27 16:35:05,159 - __main__ - INFO - Successfully fetched 461 days of price data for MSFT
+2025-11-27 16:35:05,160 - utils.error_handler - INFO - fetch_historical_prices completed successfully in 0.25s
+2025-11-27 16:35:05,163 - __main__ - INFO - Saved price data to data\raw\prices\MSFT_prices.csv
+2025-11-27 16:35:05,163 - utils.error_handler - INFO - Starting fetch_company_info with args=(<__main__.StockPriceCollector object at 0x000002452248E5A0>, 'MSFT'), kwargs=[]
+2025-11-27 16:35:05,163 - __main__ - INFO - Fetching company info for MSFT
+2025-11-27 16:35:05,370 - __main__ - INFO - Successfully fetched info for MSFT
+2025-11-27 16:35:05,370 - utils.error_handler - INFO - fetch_company_info completed successfully in 0.21s
+2025-11-27 16:35:05,371 - __main__ - INFO - Saved company info to data\raw\prices\MSFT_info.json
+2025-11-27 16:35:05,371 - __main__ - INFO - Processing GOOGL (3/3)
+2025-11-27 16:35:06,961 - utils.error_handler - INFO - Starting fetch_historical_prices with args=(<__main__.StockPriceCollector object at 0x000002452248E5A0>, 'GOOGL'), kwargs=[]
+2025-11-27 16:35:06,961 - __main__ - INFO - Fetching prices for GOOGL from 2023-01-01 to 2024-11-01
+2025-11-27 16:35:07,120 - __main__ - INFO - Successfully fetched 461 days of price data for GOOGL
+2025-11-27 16:35:07,120 - utils.error_handler - INFO - fetch_historical_prices completed successfully in 0.16s
+2025-11-27 16:35:07,123 - __main__ - INFO - Saved price data to data\raw\prices\GOOGL_prices.csv
+2025-11-27 16:35:07,171 - utils.error_handler - INFO - Starting fetch_company_info with args=(<__main__.StockPriceCollector object at 0x000002452248E5A0>, 'GOOGL'), kwargs=[]
+2025-11-27 16:35:07,171 - __main__ - INFO - Fetching company info for GOOGL
+2025-11-27 16:35:07,379 - __main__ - INFO - Successfully fetched info for GOOGL
+2025-11-27 16:35:07,379 - utils.error_handler - INFO - fetch_company_info completed successfully in 0.21s
+2025-11-27 16:35:07,390 - __main__ - INFO - Saved company info to data\raw\prices\GOOGL_info.json
+2025-11-27 16:35:07,391 - __main__ - INFO - Completed: 3/3 tickers successful
+2025-11-27 16:39:05,076 - __main__ - INFO - Processing AAPL (1/3)
+2025-11-27 16:39:05,076 - utils.error_handler - INFO - Starting fetch_historical_prices with args=(<__main__.StockPriceCollector object at 0x000002B87B6BEF90>, 'AAPL'), kwargs=[]
+2025-11-27 16:39:05,076 - __main__ - INFO - Fetching prices for AAPL from 2023-01-01 to 2025-11-01
+2025-11-27 16:39:05,460 - __main__ - INFO - Successfully fetched 711 days of price data for AAPL
+2025-11-27 16:39:05,460 - utils.error_handler - INFO - fetch_historical_prices completed successfully in 0.38s
+2025-11-27 16:39:05,466 - __main__ - INFO - Saved price data to data\raw\prices\AAPL_prices.csv
+2025-11-27 16:39:05,466 - utils.error_handler - INFO - Starting fetch_company_info with args=(<__main__.StockPriceCollector object at 0x000002B87B6BEF90>, 'AAPL'), kwargs=[]
+2025-11-27 16:39:05,466 - __main__ - INFO - Fetching company info for AAPL
+2025-11-27 16:39:05,681 - __main__ - INFO - Successfully fetched info for AAPL
+2025-11-27 16:39:05,681 - utils.error_handler - INFO - fetch_company_info completed successfully in 0.21s
+2025-11-27 16:39:05,692 - __main__ - INFO - Saved company info to data\raw\prices\AAPL_info.json
+2025-11-27 16:39:05,692 - __main__ - INFO - Processing MSFT (2/3)
+2025-11-27 16:39:07,261 - utils.error_handler - INFO - Starting fetch_historical_prices with args=(<__main__.StockPriceCollector object at 0x000002B87B6BEF90>, 'MSFT'), kwargs=[]
+2025-11-27 16:39:07,261 - __main__ - INFO - Fetching prices for MSFT from 2023-01-01 to 2025-11-01
+2025-11-27 16:39:07,409 - __main__ - INFO - Successfully fetched 711 days of price data for MSFT
+2025-11-27 16:39:07,409 - utils.error_handler - INFO - fetch_historical_prices completed successfully in 0.15s
+2025-11-27 16:39:07,414 - __main__ - INFO - Saved price data to data\raw\prices\MSFT_prices.csv
+2025-11-27 16:39:07,482 - utils.error_handler - INFO - Starting fetch_company_info with args=(<__main__.StockPriceCollector object at 0x000002B87B6BEF90>, 'MSFT'), kwargs=[]
+2025-11-27 16:39:07,482 - __main__ - INFO - Fetching company info for MSFT
+2025-11-27 16:39:07,701 - __main__ - INFO - Successfully fetched info for MSFT
+2025-11-27 16:39:07,701 - utils.error_handler - INFO - fetch_company_info completed successfully in 0.22s
+2025-11-27 16:39:07,702 - __main__ - INFO - Saved company info to data\raw\prices\MSFT_info.json
+2025-11-27 16:39:07,703 - __main__ - INFO - Processing GOOGL (3/3)
+2025-11-27 16:39:09,210 - utils.error_handler - INFO - Starting fetch_historical_prices with args=(<__main__.StockPriceCollector object at 0x000002B87B6BEF90>, 'GOOGL'), kwargs=[]
+2025-11-27 16:39:09,210 - __main__ - INFO - Fetching prices for GOOGL from 2023-01-01 to 2025-11-01
+2025-11-27 16:39:09,341 - __main__ - INFO - Successfully fetched 711 days of price data for GOOGL
+2025-11-27 16:39:09,342 - utils.error_handler - INFO - fetch_historical_prices completed successfully in 0.13s
+2025-11-27 16:39:09,346 - __main__ - INFO - Saved price data to data\raw\prices\GOOGL_prices.csv
+2025-11-27 16:39:09,503 - utils.error_handler - INFO - Starting fetch_company_info with args=(<__main__.StockPriceCollector object at 0x000002B87B6BEF90>, 'GOOGL'), kwargs=[]
+2025-11-27 16:39:09,503 - __main__ - INFO - Fetching company info for GOOGL
+2025-11-27 16:39:09,695 - __main__ - INFO - Successfully fetched info for GOOGL
+2025-11-27 16:39:09,695 - utils.error_handler - INFO - fetch_company_info completed successfully in 0.19s
+2025-11-27 16:39:09,705 - __main__ - INFO - Saved company info to data\raw\prices\GOOGL_info.json
+2025-11-27 16:39:09,707 - __main__ - INFO - Completed: 3/3 tickers successful
+2025-11-27 16:53:22,467 - __main__ - WARNING - About to make 3 API calls to Alpha Vantage
+2025-11-27 16:53:22,467 - __main__ - WARNING - Free tier limit: 25 calls/day. Current batch: 3
+2025-11-27 16:53:22,467 - __main__ - INFO - Processing AAPL (1/3)
+2025-11-27 16:53:22,467 - utils.error_handler - INFO - Starting fetch_earnings with args=(<__main__.EarningsCollector object at 0x000001CB81047A40>, 'AAPL'), kwargs=[]
+2025-11-27 16:53:22,468 - __main__ - INFO - Fetching earnings for AAPL
+2025-11-27 16:53:22,843 - __main__ - INFO - Successfully fetched earnings for AAPL
+2025-11-27 16:53:22,847 - utils.error_handler - INFO - fetch_earnings completed successfully in 0.38s
+2025-11-27 16:53:22,852 - __main__ - INFO - Saved raw earnings data to data\raw\earnings\AAPL_earnings_raw.json
+2025-11-27 16:53:22,868 - __main__ - INFO - Saved earnings data to data\raw\earnings\AAPL_earnings.csv
+2025-11-27 16:53:22,868 - __main__ - INFO - Processing MSFT (2/3)
+2025-11-27 16:53:22,868 - utils.error_handler - INFO - Starting fetch_earnings with args=(<__main__.EarningsCollector object at 0x000001CB81047A40>, 'MSFT'), kwargs=[]
+2025-11-27 16:53:22,868 - __main__ - INFO - Fetching earnings for MSFT
+2025-11-27 16:53:23,116 - __main__ - INFO - Successfully fetched earnings for MSFT
+2025-11-27 16:53:23,119 - utils.error_handler - INFO - fetch_earnings completed successfully in 0.25s
+2025-11-27 16:53:23,124 - __main__ - INFO - Saved raw earnings data to data\raw\earnings\MSFT_earnings_raw.json
+2025-11-27 16:53:23,130 - __main__ - INFO - Saved earnings data to data\raw\earnings\MSFT_earnings.csv
+2025-11-27 16:53:23,130 - __main__ - INFO - Processing GOOGL (3/3)
+2025-11-27 16:53:23,130 - utils.error_handler - INFO - Starting fetch_earnings with args=(<__main__.EarningsCollector object at 0x000001CB81047A40>, 'GOOGL'), kwargs=[]
+2025-11-27 16:53:23,130 - __main__ - INFO - Fetching earnings for GOOGL
+2025-11-27 16:53:23,382 - __main__ - INFO - Successfully fetched earnings for GOOGL
+2025-11-27 16:53:23,383 - utils.error_handler - INFO - fetch_earnings completed successfully in 0.25s
+2025-11-27 16:53:23,387 - __main__ - INFO - Saved raw earnings data to data\raw\earnings\GOOGL_earnings_raw.json
+2025-11-27 16:53:23,392 - __main__ - INFO - Saved earnings data to data\raw\earnings\GOOGL_earnings.csv
+2025-11-27 16:53:23,392 - __main__ - INFO - Completed: 3 success, 0 failed, 0 no data
+2025-11-27 16:53:23,392 - __main__ - INFO - Total API calls used: 3
