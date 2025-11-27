@@ -8,6 +8,7 @@ __pycache__/
 
 # Data files
 data/raw/*
+data/test/
 data/processed/*
 data/database/*.db
 !data/raw/.gitkeep

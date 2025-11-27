@@ -91,3 +91,21 @@
 2025-11-27 16:53:23,392 - __main__ - INFO - Saved earnings data to data\raw\earnings\GOOGL_earnings.csv
 2025-11-27 16:53:23,392 - __main__ - INFO - Completed: 3 success, 0 failed, 0 no data
 2025-11-27 16:53:23,392 - __main__ - INFO - Total API calls used: 3
+2025-11-27 17:01:34,467 - utils.error_handler - WARNING - flaky_function failed (attempt 1/4): Attempt 1 failed. Retrying in 1.0 seconds...
+2025-11-27 17:01:35,469 - utils.error_handler - WARNING - flaky_function failed (attempt 2/4): Attempt 2 failed. Retrying in 0.1 seconds...
+2025-11-27 17:01:35,570 - utils.error_handler - INFO - Starting fetch_historical_prices with args=(<collection.stock_prices.StockPriceCollector object at 0x0000028069DA27B0>, 'AAPL'), kwargs=[]
+2025-11-27 17:01:35,571 - collection.stock_prices - INFO - Fetching prices for AAPL from 2024-10-01 to 2024-11-01
+2025-11-27 17:01:35,986 - collection.stock_prices - INFO - Successfully fetched 23 days of price data for AAPL
+2025-11-27 17:01:35,987 - utils.error_handler - INFO - fetch_historical_prices completed successfully in 0.42s
+2025-11-27 17:01:35,999 - collection.stock_prices - INFO - Saved price data to data\test\prices\AAPL_prices.csv
+2025-11-27 17:01:35,999 - utils.error_handler - INFO - Starting fetch_company_info with args=(<collection.stock_prices.StockPriceCollector object at 0x0000028069DA27B0>, 'AAPL'), kwargs=[]
+2025-11-27 17:01:36,000 - collection.stock_prices - INFO - Fetching company info for AAPL
+2025-11-27 17:01:36,192 - collection.stock_prices - INFO - Successfully fetched info for AAPL
+2025-11-27 17:01:36,192 - utils.error_handler - INFO - fetch_company_info completed successfully in 0.19s
+2025-11-27 17:01:36,193 - collection.stock_prices - INFO - Saved company info to data\test\prices\AAPL_info.json
+2025-11-27 17:01:44,263 - utils.error_handler - INFO - Starting fetch_earnings with args=(<collection.earnings.EarningsCollector object at 0x00000280696994C0>, 'AAPL'), kwargs=[]
+2025-11-27 17:01:44,263 - collection.earnings - INFO - Fetching earnings for AAPL
+2025-11-27 17:01:44,729 - collection.earnings - INFO - Successfully fetched earnings for AAPL
+2025-11-27 17:01:44,732 - utils.error_handler - INFO - fetch_earnings completed successfully in 0.47s
+2025-11-27 17:01:44,736 - collection.earnings - INFO - Saved raw earnings data to data\test\earnings\AAPL_earnings_raw.json
+2025-11-27 17:01:44,755 - collection.earnings - INFO - Saved earnings data to data\test\earnings\AAPL_earnings.csv
