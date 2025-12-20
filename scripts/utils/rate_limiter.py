@@ -41,12 +41,25 @@ class RateLimiter:
             
             # Check if we're at the limit
             if len(self.calls) >= self.max_calls:
-                sleep_time = (self.calls[0] + timedelta(seconds=self.period) - now).total_seconds()
+                # Wait until enough calls expire to give us breathing room
+                # Clear at least 25% of the limit or 10 calls, whichever is smaller
+                calls_to_clear = min(max(1, self.max_calls // 4), 10)
+                
+                # Find when the Nth oldest call expires
+                if len(self.calls) >= calls_to_clear:
+                    target_call = self.calls[calls_to_clear - 1]
+                else:
+                    target_call = self.calls[0]
+                
+                sleep_time = (target_call + timedelta(seconds=self.period) - now).total_seconds() + 0.3  # +0.1s buffer
+                
                 if sleep_time > 0:
-                    print(f"Rate limit reached. Sleeping for {sleep_time:.2f} seconds...")
+                    print(f"Rate limit reached. Sleeping for {sleep_time:.2f} seconds to clear {calls_to_clear} slots...")
                     time.sleep(sleep_time)
-                    # Remove old calls after sleeping
-                    while self.calls and self.calls[0] < datetime.now() - timedelta(seconds=self.period):
+                    
+                    # Clean up expired calls after sleeping
+                    now = datetime.now()
+                    while self.calls and self.calls[0] < now - timedelta(seconds=self.period):
                         self.calls.popleft()
             
             # Record this call
@@ -87,10 +100,10 @@ def simple_rate_limit(calls_per_second=1):
 
 
 # Pre-configured rate limiters for each API
-alpha_vantage_limiter = RateLimiter(max_calls=5, period=60)  # 5 per minute
-reddit_limiter = RateLimiter(max_calls=60, period=60)  # 60 per minute
-sec_limiter = simple_rate_limit(calls_per_second=10)  # 10 per second
-finnhub_limiter = RateLimiter(max_calls=60, period=60)  # 60 per minute
-yfinance_limiter = simple_rate_limit(calls_per_second=2000/3600)  # ~2000 per hour
+finnhub_limiter = RateLimiter(max_calls=54, period=60)  # 54 instead of 60
+alpha_vantage_limiter = RateLimiter(max_calls=4, period=60)  # 4 instead of 5
+reddit_limiter = RateLimiter(max_calls=54, period=60)  # 54 instead of 60
+sec_limiter = simple_rate_limit(calls_per_second=9)  # 9 instead of 10
+yfinance_limiter = simple_rate_limit(calls_per_second=0.5)  # ~1800/hr instead of 2000
 
 #print("Rate limiters initialized for APIs")

@@ -30,6 +30,7 @@ class NewsCollector:
                 "Get free key at: https://finnhub.io/register"
             )
         
+        print("Using Finnhub API for news collection")
         self.base_url = 'https://finnhub.io/api/v1'
         self.output_dir = Path(output_dir)
         self.output_dir.mkdir(parents=True, exist_ok=True)
@@ -60,14 +61,48 @@ class NewsCollector:
             'token': self.api_key
         }
         
+        # DEBUG: Log the exact request
+        logger.info(f"Request URL: {url}")
+        logger.info(f"Request params: symbol={ticker}, from={start_date}, to={end_date}")
+        
         response = requests.get(url, params=params)
         
         if response.status_code == 200:
             articles = response.json()
-            logger.info(f"Retrieved {len(articles)} articles for {ticker}")
-            return articles
+            
+            if articles:
+                # Filter out articles with invalid timestamps
+                valid_articles = []
+                for article in articles:
+                    try:
+                        # Test if timestamp is valid
+                        datetime.fromtimestamp(article['datetime'])
+                        valid_articles.append(article)
+                    except (ValueError, OSError, OverflowError) as e:
+                        logger.warning(f"Skipping article with invalid timestamp {article.get('datetime')}: {e}")
+                        continue
+                
+                if valid_articles:
+                    # Get all unique dates from valid articles
+                    dates = [datetime.fromtimestamp(a['datetime']).date() for a in valid_articles]
+                    date_counts = {}
+                    for d in dates:
+                        date_counts[d] = date_counts.get(d, 0) + 1
+                    
+                    logger.info(f"Retrieved {len(valid_articles)} valid articles for {ticker} ({len(articles) - len(valid_articles)} invalid)")
+                    logger.info(f"Date distribution: {sorted(date_counts.items())}")
+                    logger.info(f"Actual range: {min(dates)} to {max(dates)}")
+                    logger.info(f"Requested range: {start_date} to {end_date}")
+                    
+                    return valid_articles
+                else:
+                    logger.warning(f"All {len(articles)} articles had invalid timestamps for {ticker}")
+                    return []
+            else:
+                logger.warning(f"No articles returned for {ticker} in range {start_date} to {end_date}")
+                return []
         else:
-            logger.error(f"Failed to fetch news for {ticker}: {response.status_code}")
+            logger.error(f"Failed to fetch news for {ticker}: {response.status_code} - {response.text}")
             raise Exception(f"Finnhub API error: {response.status_code}")
     
     @finnhub_limiter
@@ -269,32 +304,58 @@ class NewsCollector:
             Dictionary with status and data
         """
         try:
-            # For long date ranges, chunk them (Finnhub might have limits)
-            date_chunks = chunk_date_range(start_date, end_date, chunk_size_days=90)
+            # Split into SMALLER chunks (7 days instead of 90) to avoid hitting the ~240 article limit
+            date_chunks = chunk_date_range(start_date, end_date, chunk_size_days=7)
             
             all_articles = []
             
             for chunk_start, chunk_end in date_chunks:
+                chunk_start_str = chunk_start.strftime('%Y-%m-%d')
+                chunk_end_str = chunk_end.strftime('%Y-%m-%d')
+                
+                logger.info(f"Fetching {ticker} news for chunk: {chunk_start_str} to {chunk_end_str}")
+                
                 articles = self.fetch_company_news(
                     ticker,
-                    chunk_start.strftime('%Y-%m-%d'),
-                    chunk_end.strftime('%Y-%m-%d')
+                    chunk_start_str,
+                    chunk_end_str
                 )
-                all_articles.extend(articles)
+                
+                if articles:
+                    all_articles.extend(articles)
+                    logger.info(f"Got {len(articles)} articles for this chunk ({len(all_articles)} total)")
+                    
+                    # Warn if we hit the limit
+                    if len(articles) >= 240:
+                        logger.warning(
+                            f"Hit Finnhub's ~240 article limit for {ticker} in range {chunk_start_str} to {chunk_end_str}. "
+                            f"May be missing older articles. Consider using smaller date chunks."
+                        )
             
             if not all_articles:
+                logger.warning(f"No articles found for {ticker} in range {start_date} to {end_date}")
                 return {
                     'ticker': ticker,
                     'status': 'no_data',
                     'articles': 0
                 }
             
+            # Remove duplicates (in case of overlap between chunks)
+            seen_ids = set()
+            unique_articles = []
+            for article in all_articles:
+                if article['id'] not in seen_ids:
+                    seen_ids.add(article['id'])
+                    unique_articles.append(article)
+            
+            logger.info(f"Found {len(unique_articles)} unique articles for {ticker} (removed {len(all_articles) - len(unique_articles)} duplicates)")
+            
             # Save raw data if requested
             if save_raw:
-                self.save_raw_response(all_articles, ticker, start_date, end_date)
+                self.save_raw_response(unique_articles, ticker, start_date, end_date)
             
             # Parse articles
-            df = self.parse_news_articles(all_articles, ticker)
+            df = self.parse_news_articles(unique_articles, ticker)
             
             # Save individual articles
             self.save_articles(df, ticker)
@@ -372,8 +433,8 @@ def main():
     
     # Test with small batch
     tickers = ['AAPL', 'MSFT', 'GOOGL']
-    start_date = '2024-10-01'
-    end_date = '2024-11-01'
+    start_date = '2025-01-01'
+    end_date = '2025-08-01'
     
     print(f"\nCollecting news for {len(tickers)} stocks")
     print(f"Date range: {start_date} to {end_date}")

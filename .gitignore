@@ -13,6 +13,7 @@ data/processed/*
 data/database/*.db
 !data/raw/.gitkeep
 !data/processed/.gitkeep
+data/
 
 # Jupyter
 .ipynb_checkpoints/
@@ -30,4 +31,5 @@ Thumbs.db
 # Logs
 logs/
 .log
+logs/data_collection.log
 logs/data_collection.log

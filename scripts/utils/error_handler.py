@@ -40,27 +40,42 @@ def retry_on_failure(max_retries=3, backoff_factor=2, exceptions=(Exception,)):
             
             for attempt in range(max_retries + 1):
                 try:
-                    return func(*args, **kwargs)
+                    result = func(*args, **kwargs)
+                    if attempt > 0:
+                        logger.info(f"{func.__name__} succeeded after {attempt} retries")
+                    return result
                     
                 except exceptions as e:
                     last_exception = e
                     
+                    # Check if it's a rate limit error (429)
+                    error_str = str(e).lower()
+                    is_rate_limit = '429' in error_str or 'rate limit' in error_str or 'api limit' in error_str
+                    
                     if attempt < max_retries:
-                        wait_time = backoff_factor ** attempt
-                        logger.warning(
-                            f"{func.__name__} failed (attempt {attempt + 1}/{max_retries + 1}): {str(e)}. "
-                            f"Retrying in {wait_time} seconds..."
-                        )
+                        if is_rate_limit:
+                            # For rate limits, wait longer (60 seconds to ensure window resets)
+                            wait_time = 65
+                            logger.warning(
+                                f"{func.__name__} hit rate limit (attempt {attempt + 1}/{max_retries + 1}). "
+                                f"Waiting {wait_time}s for API quota to reset..."
+                            )
+                        else:
+                            # Normal exponential backoff for other errors
+                            wait_time = backoff_factor ** attempt
+                            logger.warning(
+                                f"{func.__name__} failed (attempt {attempt + 1}/{max_retries + 1}): {str(e)}. "
+                                f"Retrying in {wait_time} seconds..."
+                            )
+                        
                         time.sleep(wait_time)
                     else:
-                        logger.error(
-                            f"{func.__name__} failed after {max_retries + 1} attempts: {str(e)}"
-                        )
+                        logger.error(f"{func.__name__} failed after {max_retries + 1} attempts: {str(e)}")
             
-            # If we get here, all retries failed
             raise last_exception
         
         return wrapper
+    
     return decorator
 
 

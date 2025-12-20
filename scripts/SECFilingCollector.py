@@ -34,40 +34,77 @@ class SECFilingCollector:
         
         self.user_agent = user_agent
         self.headers = {
-            'User-Agent': user_agent,
-            'Accept-Encoding': 'gzip, deflate',
-            'Host': 'data.sec.gov'
+            "User-Agent": user_agent,
+            "Accept-Encoding": "gzip, deflate",
+            "Host": "data.sec.gov",
+            "Connection": "keep-alive",
         }
         self.output_dir = Path(output_dir)
         self.output_dir.mkdir(parents=True, exist_ok=True)
+        # Cache file for ticker→CIK mapping
+        self.mapping_cache = self.output_dir / "company_tickers.json"
         
         # Load ticker to CIK mapping
         self.ticker_to_cik = {}
+        
+        time.sleep(0.1)
         self._load_ticker_cik_mapping()
     
-    def _load_ticker_cik_mapping(self):
-        """Load SEC's ticker to CIK mapping"""
-        logger.info("Loading ticker to CIK mapping...")
-        
+    def _save_cached_mapping(self, data):
         try:
-            url = "https://www.sec.gov/files/company_tickers.json"
-            response = requests.get(url, headers=self.headers)
-            
-            if response.status_code == 200:
-                data = response.json()
-                
-                # Convert to ticker: CIK mapping
-                for item in data.values():
-                    ticker = item['ticker'].upper()
-                    cik = str(item['cik_str']).zfill(10)  # Pad to 10 digits
-                    self.ticker_to_cik[ticker] = cik
-                
-                logger.info(f"Loaded {len(self.ticker_to_cik)} ticker-CIK mappings")
-            else:
-                logger.warning("Could not load ticker-CIK mapping from SEC")
-                
+            with open(self.mapping_cache, "w") as f:
+                json.dump(data, f)
+            logger.info(f"Saved ticker-CIK mapping cache to {self.mapping_cache}")
         except Exception as e:
-            logger.error(f"Error loading ticker-CIK mapping: {e}")
+            logger.warning(f"Could not save mapping cache: {e}")
+
+    def _load_cached_mapping(self):
+        if not self.mapping_cache.exists():
+            return False
+        try:
+            with open(self.mapping_cache, "r") as f:
+                data = json.load(f)
+            for item in data.values():
+                ticker = item["ticker"].upper()
+                cik = str(item["cik_str"]).zfill(10)
+                self.ticker_to_cik[ticker] = cik
+            logger.info(f"Loaded {len(self.ticker_to_cik)} ticker-CIK mappings from cache")
+            return True
+        except Exception as e:
+            logger.warning(f"Failed to load mapping cache: {e}")
+            return False
+
+    def _load_ticker_cik_mapping(self):
+        """Load SEC's ticker to CIK mapping with retry and cached fallback"""
+        logger.info("Loading ticker to CIK mapping...")
+        url = "https://www.sec.gov/files/company_tickers.json"
+        headers = {**self.headers, "Host": "www.sec.gov"}
+        
+        success = False
+        for attempt in range(3):
+            try:
+                resp = requests.get(url, headers=headers, timeout=10)
+                if resp.status_code == 200:
+                    data = resp.json()
+                    for item in data.values():
+                        ticker = item["ticker"].upper()
+                        cik = str(item["cik_str"]).zfill(10)
+                        self.ticker_to_cik[ticker] = cik
+                    logger.info(f"Loaded {len(self.ticker_to_cik)} ticker-CIK mappings from SEC")
+                    self._save_cached_mapping(data)
+                    success = True
+                    break
+                else:
+                    logger.warning(f"Mapping fetch attempt {attempt+1}/3 failed: HTTP {resp.status_code}")
+            except Exception as e:
+                logger.warning(f"Mapping fetch attempt {attempt+1}/3 error: {e}")
+            time.sleep(1 + attempt)  # 1s, then 2s
+            
+        if not success:
+            logger.warning("Falling back to cached ticker-CIK mapping...")
+            loaded = self._load_cached_mapping()
+            if not loaded:
+                raise Exception("Could not load ticker-CIK mapping from SEC or cache")
     
     def get_cik(self, ticker):
         """
@@ -98,21 +135,20 @@ class SECFilingCollector:
         """
         cik = self.get_cik(ticker)
         if not cik:
-            raise ValueError(f"Could not find CIK for ticker {ticker}")
-        
-        logger.info(f"Fetching submissions for {ticker} (CIK: {cik})")
+            raise Exception(f"Could not find CIK for ticker {ticker}")
         
         url = f"https://data.sec.gov/submissions/CIK{cik}.json"
-        response = requests.get(url, headers=self.headers)
+        logger.info(f"Fetching submissions for {ticker} (CIK: {cik}) URL={url}")
         
-        if response.status_code == 200:
-            data = response.json()
-            logger.info(f"Successfully fetched submissions for {ticker}")
-            return data
-        else:
-            logger.error(f"Failed to fetch {ticker}: {response.status_code}")
-            raise Exception(f"SEC API error: {response.status_code}")
-    
+        resp = requests.get(url, headers=self.headers, timeout=10)
+        if resp.status_code == 404:
+            # Non-retriable; fail fast
+            raise Exception(f"SEC submissions not found (404) for {ticker} at {url}")
+        if resp.status_code != 200:
+            raise Exception(f"SEC API error: {resp.status_code}")
+        
+        return resp.json()
+      
     def parse_filings(self, submissions_data, ticker, form_types=['8-K'], 
                      start_date=None, end_date=None):
         """
@@ -397,7 +433,7 @@ def main():
     """Example usage"""
     
     # IMPORTANT: Replace with YOUR contact info
-    user_agent = "temp temp@example.com"  # CHANGE THIS!
+    user_agent = "tajvirchahal87@gmail.com"  # CHANGE THIS!
     
     collector = SECFilingCollector(user_agent=user_agent)
     

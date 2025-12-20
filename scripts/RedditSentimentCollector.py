@@ -1,54 +1,65 @@
 """
-Reddit sentiment collector using PRAW
+Reddit sentiment collector using CSV data dumps
 """
-import praw
-import os
 import pandas as pd
 import json
 import re
 from pathlib import Path
-from datetime import datetime, timedelta
-from dotenv import load_dotenv
+from datetime import datetime
 import sys
 sys.path.append(str(Path(__file__).parent.parent))
 
-from utils.rate_limiter import reddit_limiter
-from utils.error_handler import safe_api_call, create_logger
+from utils.error_handler import create_logger
 from utils.date_utils import get_date_range
 
-load_dotenv()
 logger = create_logger(__name__)
 
 
 class RedditSentimentCollector:
-    """Collector for Reddit sentiment data using PRAW"""
+    """Collector for Reddit sentiment data from CSV dumps"""
     
-    def __init__(self, output_dir='data/raw/reddit'):
-        # Load credentials
-        self.client_id = os.getenv('REDDIT_CLIENT_ID')
-        self.client_secret = os.getenv('REDDIT_CLIENT_SECRET')
-        self.user_agent = os.getenv('REDDIT_USER_AGENT')
+    def __init__(self, csv_dir='data/raw/reddit_dumps', output_dir='data/raw/reddit'):
+        """
+        Initialize collector
         
-        if not all([self.client_id, self.client_secret, self.user_agent]):
-            raise ValueError(
-                "Reddit credentials not found. Set REDDIT_CLIENT_ID, "
-                "REDDIT_CLIENT_SECRET, and REDDIT_USER_AGENT in .env"
-            )
-        
-        # Initialize Reddit instance
-        self.reddit = praw.Reddit(
-            client_id=self.client_id,
-            client_secret=self.client_secret,
-            user_agent=self.user_agent
-        )
-        
+        Args:
+            csv_dir: Directory containing monthly CSV dumps
+            output_dir: Directory to save processed results
+        """
+        self.csv_dir = Path(csv_dir)
         self.output_dir = Path(output_dir)
         self.output_dir.mkdir(parents=True, exist_ok=True)
         
-        # Subreddits to monitor
-        self.subreddits = ['wallstreetbets', 'stocks', 'investing', 'StockMarket']
+        # Target subreddits (case-insensitive matching)
+        self.subreddits = ['wallstreetbets', 'stocks', 'investing', 'stockmarket']
         
-        logger.info(f"Initialized Reddit collector for subreddits: {self.subreddits}")
+        logger.info(f"Initialized Reddit collector from CSV dumps in: {self.csv_dir}")
+        logger.info(f"Target subreddits: {self.subreddits}")
+    
+    def load_csv_files(self):
+        """
+        Load all CSV files from the data dump directory
+        
+        Returns:
+            Combined DataFrame with all posts
+        """
+        csv_files = sorted(self.csv_dir.glob('*.csv'))
+        
+        if not csv_files:
+            raise ValueError(f"No CSV files found in {self.csv_dir}")
+        
+        logger.info(f"Found {len(csv_files)} CSV files to process")
+        
+        dfs = []
+        for csv_file in csv_files:
+            logger.info(f"Loading {csv_file.name}...")
+            df = pd.read_csv(csv_file)
+            dfs.append(df)
+        
+        combined_df = pd.concat(dfs, ignore_index=True)
+        logger.info(f"Loaded {len(combined_df):,} total posts from CSV dumps")
+        
+        return combined_df
     
     def extract_tickers(self, text):
         """
@@ -61,9 +72,10 @@ class RedditSentimentCollector:
         Returns:
             List of ticker symbols found
         """
-        if not text:
+        if not text or pd.isna(text):
             return []
         
+        text = str(text)
         tickers = []
         
         # Pattern 1: $TICKER format (like Twitter cashtags)
@@ -79,7 +91,10 @@ class RedditSentimentCollector:
             'HAS', 'HIM', 'HIS', 'HOW', 'ITS', 'MAY', 'NEW', 'NOW',
             'OLD', 'SEE', 'TWO', 'WAY', 'WHO', 'BOY', 'DID', 'ILL',
             'LET', 'PUT', 'SAY', 'SHE', 'TOO', 'USE', 'CEO', 'WSB',
-            'DD', 'YOLO', 'FOMO', 'IMO', 'TL;DR', 'TLDR', 'ETA', 'ATH'
+            'DD', 'YOLO', 'FOMO', 'IMO', 'TLDR', 'ETA', 'ATH', 'IMO',
+            'EDIT', 'INFO', 'ALSO', 'JUST', 'LIKE', 'WILL', 'THIS',
+            'THAN', 'THAT', 'WITH', 'FROM', 'HAVE', 'MORE', 'BEEN',
+            'WERE', 'THEY', 'WHAT', 'THAN', 'WHEN', 'YOUR', 'WILL'
         }
         
         word_pattern = r'\b([A-Z]{2,5})\b'
@@ -102,23 +117,25 @@ class RedditSentimentCollector:
         Returns:
             Sentiment score between -1 (negative) and 1 (positive)
         """
-        if not text:
+        if not text or pd.isna(text):
             return 0.0
         
-        text_lower = text.lower()
+        text_lower = str(text).lower()
         
         # Positive keywords
         positive_words = [
             'bull', 'bullish', 'buy', 'long', 'calls', 'moon', 'rocket',
             'up', 'gain', 'profit', 'win', 'beat', 'strong', 'good',
-            'great', 'excellent', 'love', 'positive', 'growth', 'surge'
+            'great', 'excellent', 'love', 'positive', 'growth', 'surge',
+            'rally', 'soar', 'breakout'
         ]
         
         # Negative keywords
         negative_words = [
             'bear', 'bearish', 'sell', 'short', 'puts', 'crash', 'down',
             'loss', 'lose', 'bad', 'weak', 'poor', 'terrible', 'hate',
-            'negative', 'decline', 'drop', 'fall', 'miss', 'warning'
+            'negative', 'decline', 'drop', 'fall', 'miss', 'warning',
+            'dump', 'tank', 'collapse'
         ]
         
         # Count occurrences
@@ -143,59 +160,57 @@ class RedditSentimentCollector:
         
         return max(-1.0, min(1.0, final_sentiment))  # Clamp to [-1, 1]
     
-    @reddit_limiter
-    @safe_api_call
-    def search_ticker_posts(self, ticker, subreddit_name, time_filter='month', limit=100):
+    def process_posts_for_ticker(self, df, ticker):
         """
-        Search for posts mentioning a ticker in a subreddit
+        Process all posts mentioning a specific ticker
         
         Args:
-            ticker: Stock ticker to search
-            subreddit_name: Subreddit to search
-            time_filter: 'hour', 'day', 'week', 'month', 'year', 'all'
-            limit: Maximum posts to retrieve
+            df: DataFrame with all posts
+            ticker: Stock ticker to filter for
         
         Returns:
             List of post dictionaries
         """
-        logger.info(f"Searching r/{subreddit_name} for {ticker} (time: {time_filter}, limit: {limit})")
-        
-        subreddit = self.reddit.subreddit(subreddit_name)
-        
-        # Search for ticker (try both $TICKER and TICKER)
-        search_query = f"{ticker} OR ${ticker}"
+        logger.info(f"Processing posts for {ticker}...")
         
         posts = []
         
-        for submission in subreddit.search(search_query, time_filter=time_filter, limit=limit):
-            # Extract ticker mentions
-            tickers_in_post = self.extract_tickers(submission.title + ' ' + submission.selftext)
+        for idx, row in df.iterrows():
+            # Combine title and text for analysis
+            title = str(row['title']) if not pd.isna(row['title']) else ''
+            text = str(row['text']) if not pd.isna(row['text']) else ''
+            combined_text = title + ' ' + text
+            
+            # Extract tickers from this post
+            tickers_in_post = self.extract_tickers(combined_text)
             
             # Only include if our ticker is mentioned
             if ticker.upper() in [t.upper() for t in tickers_in_post]:
                 # Calculate sentiment
-                sentiment = self.simple_sentiment(
-                    submission.title + ' ' + submission.selftext,
-                    submission.score
-                )
+                sentiment = self.simple_sentiment(combined_text, row['score'])
+                
+                # Parse date (handle different formats)
+                try:
+                    created_dt = pd.to_datetime(row['created'])
+                except:
+                    logger.warning(f"Could not parse date: {row['created']}")
+                    continue
                 
                 post_data = {
-                    'post_id': submission.id,
-                    'created_utc': datetime.fromtimestamp(submission.created_utc),
-                    'title': submission.title,
-                    'selftext': submission.selftext[:500],  # Truncate long posts
-                    'score': submission.score,
-                    'upvote_ratio': submission.upvote_ratio,
-                    'num_comments': submission.num_comments,
-                    'author': str(submission.author) if submission.author else '[deleted]',
-                    'url': submission.url,
+                    'created_utc': created_dt,
+                    'title': title,
+                    'text': text[:500],  # Truncate long text
+                    'score': int(row['score']),
+                    'author': str(row['author']) if not pd.isna(row['author']) else '[deleted]',
+                    'url': str(row['url']) if not pd.isna(row['url']) else '',
+                    'link': str(row['link']) if not pd.isna(row['link']) else '',
                     'tickers': tickers_in_post,
                     'sentiment': sentiment
                 }
                 
                 posts.append(post_data)
         
-        logger.info(f"Found {len(posts)} posts mentioning {ticker} in r/{subreddit_name}")
+        logger.info(f"Found {len(posts)} posts mentioning {ticker}")
         return posts
     
     def aggregate_daily_sentiment(self, posts, ticker):
@@ -213,18 +228,17 @@ class RedditSentimentCollector:
             return pd.DataFrame()
         
         df = pd.DataFrame(posts)
-        df['date'] = df['created_utc'].dt.date
+        df['date'] = pd.to_datetime(df['created_utc']).dt.date
         
         # Group by date
         daily = df.groupby('date').agg({
-            'post_id': 'count',
+            'title': 'count',  # Use title for count
             'sentiment': 'mean',
-            'score': ['mean', 'sum'],
-            'num_comments': 'sum'
+            'score': ['mean', 'sum']
         }).reset_index()
         
         # Flatten column names
-        daily.columns = ['date', 'mention_count', 'avg_sentiment', 'avg_score', 'total_score', 'total_comments']
+        daily.columns = ['date', 'mention_count', 'avg_sentiment', 'avg_score', 'total_score']
         
         # Calculate positive/negative counts
         positive_counts = df[df['sentiment'] > 0.1].groupby('date').size()
@@ -238,11 +252,14 @@ class RedditSentimentCollector:
         # Add ticker
         daily['ticker'] = ticker
         
+        # Sort by date
+        daily = daily.sort_values('date').reset_index(drop=True)
+        
         return daily
     
-    def save_posts(self, posts, ticker, subreddit_name):
+    def save_posts(self, posts, ticker):
         """Save individual posts to JSON"""
-        output_file = self.output_dir / f"{ticker}_{subreddit_name}_posts.json"
+        output_file = self.output_dir / f"{ticker}_posts.json"
         
         # Convert datetime to string for JSON serialization
         posts_serializable = []
@@ -256,76 +273,55 @@ class RedditSentimentCollector:
         
         logger.info(f"Saved {len(posts)} posts to {output_file}")
     
-    def save_daily_sentiment(self, df, ticker, subreddit_name):
+    def save_daily_sentiment(self, df, ticker):
         """Save daily aggregated sentiment to CSV"""
-        output_file = self.output_dir / f"{ticker}_{subreddit_name}_daily.csv"
+        output_file = self.output_dir / f"{ticker}_daily.csv"
         df.to_csv(output_file, index=False)
         logger.info(f"Saved daily sentiment to {output_file}")
     
-    def collect_for_ticker(self, ticker, subreddits=None, time_filter='month', 
-                          limit_per_subreddit=100, save_posts_detail=True):
+    def collect_for_ticker(self, ticker, all_posts_df, save_posts_detail=True):
         """
-        Collect Reddit sentiment for a ticker across multiple subreddits
+        Collect Reddit sentiment for a ticker
         
         Args:
             ticker: Stock ticker
-            subreddits: List of subreddit names (default: uses self.subreddits)
-            time_filter: Time filter for search
-            limit_per_subreddit: Max posts per subreddit
+            all_posts_df: DataFrame with all posts from CSV dumps
             save_posts_detail: Whether to save individual posts
         
         Returns:
             Dictionary with status and aggregated data
         """
-        if subreddits is None:
-            subreddits = self.subreddits
-        
         try:
-            all_posts = []
+            # Process posts for this ticker
+            posts = self.process_posts_for_ticker(all_posts_df, ticker)
             
-            # Collect from each subreddit
-            for subreddit in subreddits:
-                posts = self.search_ticker_posts(
-                    ticker,
-                    subreddit,
-                    time_filter=time_filter,
-                    limit=limit_per_subreddit
-                )
-                
-                # Add subreddit info
-                for post in posts:
-                    post['subreddit'] = subreddit
-                
-                all_posts.extend(posts)
-                
-                # Save individual posts if requested
-                if save_posts_detail and posts:
-                    self.save_posts(posts, ticker, subreddit)
-            
-            if not all_posts:
+            if not posts:
                 return {
                     'ticker': ticker,
                     'status': 'no_data',
                     'total_posts': 0
                 }
             
+            # Save individual posts if requested
+            if save_posts_detail:
+                self.save_posts(posts, ticker)
+            
             # Aggregate daily sentiment
-            daily_sentiment = self.aggregate_daily_sentiment(all_posts, ticker)
+            daily_sentiment = self.aggregate_daily_sentiment(posts, ticker)
             
             # Save aggregated data
-            self.save_daily_sentiment(daily_sentiment, ticker, 'combined')
+            self.save_daily_sentiment(daily_sentiment, ticker)
             
             return {
                 'ticker': ticker,
                 'status': 'success',
-                'total_posts': len(all_posts),
+                'total_posts': len(posts),
                 'date_range': {
                     'earliest': daily_sentiment['date'].min().strftime('%Y-%m-%d'),
                     'latest': daily_sentiment['date'].max().strftime('%Y-%m-%d')
                 },
                 'avg_daily_mentions': daily_sentiment['mention_count'].mean(),
-                'avg_sentiment': daily_sentiment['avg_sentiment'].mean(),
-                'subreddits': subreddits
+                'avg_sentiment': daily_sentiment['avg_sentiment'].mean()
             }
             
         except Exception as e:
@@ -336,19 +332,21 @@ class RedditSentimentCollector:
                 'error': str(e)
             }
     
-    def collect_for_multiple_tickers(self, tickers, time_filter='month', 
-                                    limit_per_subreddit=100):
+    def collect_for_multiple_tickers(self, tickers, save_posts_detail=True):
         """
         Collect Reddit sentiment for multiple tickers
         
         Args:
             tickers: List of ticker symbols
-            time_filter: Time filter for search
-            limit_per_subreddit: Max posts per subreddit
+            save_posts_detail: Whether to save individual posts
         
         Returns:
             List of results for each ticker
         """
+        # Load all CSV files once
+        logger.info("Loading CSV dumps...")
+        all_posts_df = self.load_csv_files()
+        
         results = []
         
         for i, ticker in enumerate(tickers, 1):
@@ -356,13 +354,13 @@ class RedditSentimentCollector:
             
             result = self.collect_for_ticker(
                 ticker,
-                time_filter=time_filter,
-                limit_per_subreddit=limit_per_subreddit
+                all_posts_df,
+                save_posts_detail=save_posts_detail
             )
             results.append(result)
             
             # Progress update
-            if i % 3 == 0:
+            if i % 5 == 0:
                 successful = sum(1 for r in results if r['status'] == 'success')
                 logger.info(f"Progress: {i}/{len(tickers)}, {successful} successful")
         
@@ -378,27 +376,31 @@ class RedditSentimentCollector:
 
 def main():
     """Example usage"""
-    collector = RedditSentimentCollector()
+    collector = RedditSentimentCollector(
+        csv_dir='data/reddit_dump/reddit/submissions',  # Directory with your CSV files
+        output_dir='data/processed/reddit-sentiment'    # Directory to save results
+    )
     
     # Test with small batch
-    tickers = ['AAPL', 'TSLA', 'GME']
+    tickers = ['AAPL', 'TSLA', 'GME', 'NVDA', 'AMD']
     
     print(f"\nCollecting Reddit sentiment for {len(tickers)} stocks")
-    print(f"Subreddits: {collector.subreddits}")
-    print(f"Time filter: month\n")
+    print(f"From CSV dumps in: {collector.csv_dir}\n")
     
     results = collector.collect_for_multiple_tickers(
         tickers,
-        time_filter='month',  # Options: 'day', 'week', 'month', 'year'
-        limit_per_subreddit=100
+        save_posts_detail=True
     )
     
     # Print summary
+    print("\n" + "="*60)
+    print("RESULTS SUMMARY")
+    print("="*60)
     for result in results:
         print(f"\n{result['ticker']}: {result['status']}")
         if result['status'] == 'success':
             print(f"  Total posts: {result['total_posts']}")
-            print(f"  Date range: {result['date_range']}")
+            print(f"  Date range: {result['date_range']['earliest']} to {result['date_range']['latest']}")
             print(f"  Avg daily mentions: {result['avg_daily_mentions']:.1f}")
             print(f"  Avg sentiment: {result['avg_sentiment']:.2f}")
 
