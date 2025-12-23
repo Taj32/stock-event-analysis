@@ -216,7 +216,7 @@ CREATE TABLE event_types (
 
 -- Pre-populate common event types
 INSERT INTO event_types (event_type_name, source_category, description) VALUES
-('reddit_sentiment_spike', 'social', 'Abnormal spike in Reddit sentiment'),
+-- ('reddit_sentiment_spike', 'social', 'Abnormal spike in Reddit sentiment'),
 ('reddit_volume_surge', 'social', 'High volume of Reddit mentions'),
 ('news_cluster', 'news', 'Multiple news articles in short timeframe'),
 ('earnings_report', 'financial', 'Quarterly earnings announcement (10-Q)'),

@@ -18,7 +18,7 @@ logger = create_logger(__name__)
 class RedditSentimentCollector:
     """Collector for Reddit sentiment data from CSV dumps"""
     
-    def __init__(self, csv_dir='data/raw/reddit_dumps', output_dir='data/raw/reddit'):
+    def __init__(self, csv_dir='data/raw/reddit_dumps/submissions', output_dir='data/raw/reddit'):
         """
         Initialize collector
         
@@ -382,7 +382,7 @@ def main():
     )
     
     # Test with small batch
-    tickers = ['AAPL', 'TSLA', 'GME', 'NVDA', 'AMD']
+    tickers = ['AAPL', 'MSFT', 'NVDA', 'AMZN', 'QQQ', 'META', 'TSLA', 'JPM', 'SPY', 'GOOGL', 'AMD', 'IWM']
     
     print(f"\nCollecting Reddit sentiment for {len(tickers)} stocks")
     print(f"From CSV dumps in: {collector.csv_dir}\n")
