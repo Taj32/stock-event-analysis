@@ -89957,3 +89957,61 @@
 2025-12-30 15:19:36,042 - __main__ - INFO - Fetching news for AAPL from 2024-01-09 to 2024-01-16
 2025-12-30 15:19:36,042 - __main__ - INFO - Request URL: https://finnhub.io/api/v1/company-news
 2025-12-30 15:19:36,042 - __main__ - INFO - Request params: symbol=AAPL, from=2024-01-09, to=2024-01-16
+2025-12-30 15:54:37,926 - __main__ - INFO - Initialized SEC filings sentiment collector from: data\raw\sec_filings
+2025-12-30 15:54:37,926 - __main__ - INFO - Output directory: data\processed\sec-sentiment
+2025-12-30 15:54:37,926 - __main__ - INFO - Processing AAPL (1/9)
+2025-12-30 15:54:37,930 - __main__ - INFO - Loaded 36 filings for AAPL from AAPL_filings.csv
+2025-12-30 15:54:37,931 - __main__ - INFO - Processing 36 filings for AAPL...
+2025-12-30 15:54:37,941 - __main__ - INFO - Processed 36 filings for AAPL
+2025-12-30 15:54:37,942 - __main__ - INFO - Saved 36 filings to data\processed\sec-sentiment\AAPL_filings_sentiment.json
+2025-12-30 15:54:37,957 - __main__ - INFO - Saved daily sentiment to data\processed\sec-sentiment\AAPL_daily_sentiment.csv
+2025-12-30 15:54:37,958 - __main__ - INFO - Processing MSFT (2/9)
+2025-12-30 15:54:37,959 - __main__ - INFO - Loaded 39 filings for MSFT from MSFT_filings.csv
+2025-12-30 15:54:37,959 - __main__ - INFO - Processing 39 filings for MSFT...
+2025-12-30 15:54:37,966 - __main__ - INFO - Processed 39 filings for MSFT
+2025-12-30 15:54:37,967 - __main__ - INFO - Saved 39 filings to data\processed\sec-sentiment\MSFT_filings_sentiment.json
+2025-12-30 15:54:37,986 - __main__ - INFO - Saved daily sentiment to data\processed\sec-sentiment\MSFT_daily_sentiment.csv
+2025-12-30 15:54:37,986 - __main__ - INFO - Processing GOOGL (3/9)
+2025-12-30 15:54:37,987 - __main__ - INFO - Loaded 46 filings for GOOGL from GOOGL_filings.csv
+2025-12-30 15:54:37,987 - __main__ - INFO - Processing 46 filings for GOOGL...
+2025-12-30 15:54:37,997 - __main__ - INFO - Processed 46 filings for GOOGL
+2025-12-30 15:54:37,998 - __main__ - INFO - Saved 46 filings to data\processed\sec-sentiment\GOOGL_filings_sentiment.json
+2025-12-30 15:54:38,005 - __main__ - INFO - Saved daily sentiment to data\processed\sec-sentiment\GOOGL_daily_sentiment.csv
+2025-12-30 15:54:38,005 - __main__ - INFO - Processing AMZN (4/9)
+2025-12-30 15:54:38,006 - __main__ - INFO - Loaded 37 filings for AMZN from AMZN_filings.csv
+2025-12-30 15:54:38,006 - __main__ - INFO - Processing 37 filings for AMZN...
+2025-12-30 15:54:38,014 - __main__ - INFO - Processed 37 filings for AMZN
+2025-12-30 15:54:38,015 - __main__ - INFO - Saved 37 filings to data\processed\sec-sentiment\AMZN_filings_sentiment.json
+2025-12-30 15:54:38,021 - __main__ - INFO - Saved daily sentiment to data\processed\sec-sentiment\AMZN_daily_sentiment.csv
+2025-12-30 15:54:38,021 - __main__ - INFO - Processing NVDA (5/9)
+2025-12-30 15:54:38,022 - __main__ - INFO - Loaded 38 filings for NVDA from NVDA_filings.csv
+2025-12-30 15:54:38,022 - __main__ - INFO - Processing 38 filings for NVDA...
+2025-12-30 15:54:38,030 - __main__ - INFO - Processed 38 filings for NVDA
+2025-12-30 15:54:38,030 - __main__ - INFO - Saved 38 filings to data\processed\sec-sentiment\NVDA_filings_sentiment.json
+2025-12-30 15:54:38,037 - __main__ - INFO - Saved daily sentiment to data\processed\sec-sentiment\NVDA_daily_sentiment.csv
+2025-12-30 15:54:38,037 - __main__ - INFO - Progress: 5/9, 5 successful
+2025-12-30 15:54:38,038 - __main__ - INFO - Processing TSLA (6/9)
+2025-12-30 15:54:38,039 - __main__ - INFO - Loaded 48 filings for TSLA from TSLA_filings.csv
+2025-12-30 15:54:38,039 - __main__ - INFO - Processing 48 filings for TSLA...
+2025-12-30 15:54:38,047 - __main__ - INFO - Processed 48 filings for TSLA
+2025-12-30 15:54:38,048 - __main__ - INFO - Saved 48 filings to data\processed\sec-sentiment\TSLA_filings_sentiment.json
+2025-12-30 15:54:38,055 - __main__ - INFO - Saved daily sentiment to data\processed\sec-sentiment\TSLA_daily_sentiment.csv
+2025-12-30 15:54:38,055 - __main__ - INFO - Processing META (7/9)
+2025-12-30 15:54:38,056 - __main__ - INFO - Loaded 22 filings for META from META_filings.csv
+2025-12-30 15:54:38,056 - __main__ - INFO - Processing 22 filings for META...
+2025-12-30 15:54:38,061 - __main__ - INFO - Processed 22 filings for META
+2025-12-30 15:54:38,062 - __main__ - INFO - Saved 22 filings to data\processed\sec-sentiment\META_filings_sentiment.json
+2025-12-30 15:54:38,068 - __main__ - INFO - Saved daily sentiment to data\processed\sec-sentiment\META_daily_sentiment.csv
+2025-12-30 15:54:38,069 - __main__ - INFO - Processing JPM (8/9)
+2025-12-30 15:54:38,070 - __main__ - INFO - Loaded 26 filings for JPM from JPM_filings.csv
+2025-12-30 15:54:38,070 - __main__ - INFO - Processing 26 filings for JPM...
+2025-12-30 15:54:38,075 - __main__ - INFO - Processed 26 filings for JPM
+2025-12-30 15:54:38,076 - __main__ - INFO - Saved 26 filings to data\processed\sec-sentiment\JPM_filings_sentiment.json
+2025-12-30 15:54:38,083 - __main__ - INFO - Saved daily sentiment to data\processed\sec-sentiment\JPM_daily_sentiment.csv
+2025-12-30 15:54:38,083 - __main__ - INFO - Processing AMD (9/9)
+2025-12-30 15:54:38,084 - __main__ - INFO - Loaded 45 filings for AMD from AMD_filings.csv
+2025-12-30 15:54:38,084 - __main__ - INFO - Processing 45 filings for AMD...
+2025-12-30 15:54:38,092 - __main__ - INFO - Processed 45 filings for AMD
+2025-12-30 15:54:38,093 - __main__ - INFO - Saved 45 filings to data\processed\sec-sentiment\AMD_filings_sentiment.json
+2025-12-30 15:54:38,100 - __main__ - INFO - Saved daily sentiment to data\processed\sec-sentiment\AMD_daily_sentiment.csv
+2025-12-30 15:54:38,100 - __main__ - INFO - Completed: 9 success, 0 failed, 0 no data
