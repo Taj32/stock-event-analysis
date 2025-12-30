@@ -438,17 +438,21 @@ def main():
     collector = SECFilingCollector(user_agent=user_agent)
     
     # Test with small batch
-    tickers = ['AAPL', 'MSFT', 'GOOGL']
+    tickers = ['AAPL', 'MSFT', 'NVDA', 'AMZN', 'QQQ', 'META', 'TSLA', 'JPM', 'SPY', 'GOOGL', 'AMD', 'IWM']  # Add your full list
     start_date = '2023-01-01'
-    end_date = '2024-11-01'
+    end_date = '2025-12-01'
     
-    print(f"\nCollecting 8-K filings for {len(tickers)} stocks")
+    # Collect multiple form types
+    form_types = ['8-K', '10-Q', '10-K']
+    
+    print(f"\nCollecting SEC filings for {len(tickers)} stocks")
+    print(f"Form types: {', '.join(form_types)}")
     print(f"Date range: {start_date} to {end_date}")
     print("This is FREE (no API limits)\n")
     
     results = collector.collect_for_multiple_tickers(
         tickers,
-        form_types=['8-K'],  # Can add '10-Q', '10-K', etc.
+        form_types=form_types,
         start_date=start_date,
         end_date=end_date
     )
@@ -459,7 +463,9 @@ def main():
         if result['status'] == 'success':
             print(f"  Total filings: {result['records']}")
             print(f"  Date range: {result['date_range']}")
-            print(f"  Form types: {result['form_types']}")
+            print(f"  Form types collected:")
+            for form, count in result['form_types'].items():
+                print(f"    - {form}: {count}")
 
 
 if __name__ == '__main__':

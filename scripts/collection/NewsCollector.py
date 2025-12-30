@@ -432,8 +432,8 @@ def main():
     collector = NewsCollector()
     
     # Test with small batch
-    tickers = ['AAPL', 'MSFT', 'GOOGL']
-    start_date = '2025-01-01'
+    tickers = ['AAPL', 'MSFT', 'NVDA', 'AMZN', 'QQQ', 'META', 'TSLA', 'JPM', 'SPY', 'GOOGL', 'AMD', 'IWM']  # Add your full list
+    start_date = '2024-01-01'
     end_date = '2025-08-01'
     
     print(f"\nCollecting news for {len(tickers)} stocks")

@@ -172,7 +172,12 @@ CREATE TABLE sec_filings (
     form_type VARCHAR(10) NOT NULL,
     filing_date DATE NOT NULL,
     period_end_date DATE,
+    acceptance_datetime TIMESTAMP,
+    primary_document VARCHAR(255),
+    primary_doc_description TEXT,
     filing_url TEXT,
+    form_category VARCHAR(100),
+    items_parsed VARCHAR(255),
     document_text TEXT,
     retrieved_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
@@ -180,6 +185,7 @@ CREATE TABLE sec_filings (
 CREATE INDEX idx_sec_filings_ticker ON sec_filings(ticker_id, filing_date DESC);
 CREATE INDEX idx_sec_filings_form_type ON sec_filings(form_type, filing_date DESC);
 CREATE INDEX idx_sec_filings_accession ON sec_filings(accession_number);
+CREATE INDEX idx_sec_filings_form_category ON sec_filings(form_category);
 
 -- ----------------------------------------------------------------------------
 -- 10. SEC FILING SENTIMENT - Sentiment analysis of filing sections
