@@ -90015,3 +90015,136 @@
 2025-12-30 15:54:38,093 - __main__ - INFO - Saved 45 filings to data\processed\sec-sentiment\AMD_filings_sentiment.json
 2025-12-30 15:54:38,100 - __main__ - INFO - Saved daily sentiment to data\processed\sec-sentiment\AMD_daily_sentiment.csv
 2025-12-30 15:54:38,100 - __main__ - INFO - Completed: 9 success, 0 failed, 0 no data
+2025-12-30 16:14:54,417 - __main__ - INFO - Processing AAPL (1/12)
+2025-12-30 16:14:54,417 - utils.error_handler - INFO - Starting fetch_historical_prices with args=(<__main__.StockPriceCollector object at 0x000001500E109220>, 'AAPL'), kwargs=[]
+2025-12-30 16:14:54,417 - __main__ - INFO - Fetching prices for AAPL from 2023-01-01 to 2025-11-01
+2025-12-30 16:14:55,661 - __main__ - INFO - Successfully fetched 711 days of price data for AAPL
+2025-12-30 16:14:55,661 - utils.error_handler - INFO - fetch_historical_prices completed successfully in 1.24s
+2025-12-30 16:14:55,668 - __main__ - INFO - Saved price data to data\raw\prices\AAPL_prices.csv
+2025-12-30 16:14:55,668 - utils.error_handler - INFO - Starting fetch_company_info with args=(<__main__.StockPriceCollector object at 0x000001500E109220>, 'AAPL'), kwargs=[]
+2025-12-30 16:14:55,668 - __main__ - INFO - Fetching company info for AAPL
+2025-12-30 16:14:55,921 - __main__ - INFO - Successfully fetched info for AAPL
+2025-12-30 16:14:55,923 - utils.error_handler - INFO - fetch_company_info completed successfully in 0.25s
+2025-12-30 16:14:55,924 - __main__ - INFO - Saved company info to data\raw\prices\AAPL_info.json
+2025-12-30 16:14:55,926 - __main__ - INFO - Processing MSFT (2/12)
+2025-12-30 16:14:57,661 - utils.error_handler - INFO - Starting fetch_historical_prices with args=(<__main__.StockPriceCollector object at 0x000001500E109220>, 'MSFT'), kwargs=[]
+2025-12-30 16:14:57,661 - __main__ - INFO - Fetching prices for MSFT from 2023-01-01 to 2025-11-01
+2025-12-30 16:14:57,823 - __main__ - INFO - Successfully fetched 711 days of price data for MSFT
+2025-12-30 16:14:57,824 - utils.error_handler - INFO - fetch_historical_prices completed successfully in 0.16s
+2025-12-30 16:14:57,828 - __main__ - INFO - Saved price data to data\raw\prices\MSFT_prices.csv
+2025-12-30 16:14:57,923 - utils.error_handler - INFO - Starting fetch_company_info with args=(<__main__.StockPriceCollector object at 0x000001500E109220>, 'MSFT'), kwargs=[]
+2025-12-30 16:14:57,923 - __main__ - INFO - Fetching company info for MSFT
+2025-12-30 16:14:58,153 - __main__ - INFO - Successfully fetched info for MSFT
+2025-12-30 16:14:58,153 - utils.error_handler - INFO - fetch_company_info completed successfully in 0.23s
+2025-12-30 16:14:58,155 - __main__ - INFO - Saved company info to data\raw\prices\MSFT_info.json
+2025-12-30 16:14:58,157 - __main__ - INFO - Processing NVDA (3/12)
+2025-12-30 16:14:59,825 - utils.error_handler - INFO - Starting fetch_historical_prices with args=(<__main__.StockPriceCollector object at 0x000001500E109220>, 'NVDA'), kwargs=[]
+2025-12-30 16:14:59,825 - __main__ - INFO - Fetching prices for NVDA from 2023-01-01 to 2025-11-01
+2025-12-30 16:15:00,041 - __main__ - INFO - Successfully fetched 711 days of price data for NVDA
+2025-12-30 16:15:00,042 - utils.error_handler - INFO - fetch_historical_prices completed successfully in 0.22s
+2025-12-30 16:15:00,056 - __main__ - INFO - Saved price data to data\raw\prices\NVDA_prices.csv
+2025-12-30 16:15:00,155 - utils.error_handler - INFO - Starting fetch_company_info with args=(<__main__.StockPriceCollector object at 0x000001500E109220>, 'NVDA'), kwargs=[]
+2025-12-30 16:15:00,155 - __main__ - INFO - Fetching company info for NVDA
+2025-12-30 16:15:00,400 - __main__ - INFO - Successfully fetched info for NVDA
+2025-12-30 16:15:00,400 - utils.error_handler - INFO - fetch_company_info completed successfully in 0.25s
+2025-12-30 16:15:00,412 - __main__ - INFO - Saved company info to data\raw\prices\NVDA_info.json
+2025-12-30 16:15:00,413 - __main__ - INFO - Processing AMZN (4/12)
+2025-12-30 16:15:02,042 - utils.error_handler - INFO - Starting fetch_historical_prices with args=(<__main__.StockPriceCollector object at 0x000001500E109220>, 'AMZN'), kwargs=[]
+2025-12-30 16:15:02,042 - __main__ - INFO - Fetching prices for AMZN from 2023-01-01 to 2025-11-01
+2025-12-30 16:15:02,201 - __main__ - INFO - Successfully fetched 711 days of price data for AMZN
+2025-12-30 16:15:02,201 - utils.error_handler - INFO - fetch_historical_prices completed successfully in 0.16s
+2025-12-30 16:15:02,216 - __main__ - INFO - Saved price data to data\raw\prices\AMZN_prices.csv
+2025-12-30 16:15:02,401 - utils.error_handler - INFO - Starting fetch_company_info with args=(<__main__.StockPriceCollector object at 0x000001500E109220>, 'AMZN'), kwargs=[]
+2025-12-30 16:15:02,402 - __main__ - INFO - Fetching company info for AMZN
+2025-12-30 16:15:02,596 - __main__ - INFO - Successfully fetched info for AMZN
+2025-12-30 16:15:02,597 - utils.error_handler - INFO - fetch_company_info completed successfully in 0.20s
+2025-12-30 16:15:02,599 - __main__ - INFO - Saved company info to data\raw\prices\AMZN_info.json
+2025-12-30 16:15:02,600 - __main__ - INFO - Processing QQQ (5/12)
+2025-12-30 16:15:04,202 - utils.error_handler - INFO - Starting fetch_historical_prices with args=(<__main__.StockPriceCollector object at 0x000001500E109220>, 'QQQ'), kwargs=[]
+2025-12-30 16:15:04,202 - __main__ - INFO - Fetching prices for QQQ from 2023-01-01 to 2025-11-01
+2025-12-30 16:15:04,471 - __main__ - INFO - Successfully fetched 711 days of price data for QQQ
+2025-12-30 16:15:04,472 - utils.error_handler - INFO - fetch_historical_prices completed successfully in 0.27s
+2025-12-30 16:15:04,476 - __main__ - INFO - Saved price data to data\raw\prices\QQQ_prices.csv
+2025-12-30 16:15:04,598 - utils.error_handler - INFO - Starting fetch_company_info with args=(<__main__.StockPriceCollector object at 0x000001500E109220>, 'QQQ'), kwargs=[]
+2025-12-30 16:15:04,598 - __main__ - INFO - Fetching company info for QQQ
+2025-12-30 16:15:04,819 - __main__ - INFO - Successfully fetched info for QQQ
+2025-12-30 16:15:04,820 - utils.error_handler - INFO - fetch_company_info completed successfully in 0.22s
+2025-12-30 16:15:04,822 - __main__ - INFO - Saved company info to data\raw\prices\QQQ_info.json
+2025-12-30 16:15:04,823 - __main__ - INFO - Processing META (6/12)
+2025-12-30 16:15:06,472 - utils.error_handler - INFO - Starting fetch_historical_prices with args=(<__main__.StockPriceCollector object at 0x000001500E109220>, 'META'), kwargs=[]
+2025-12-30 16:15:06,472 - __main__ - INFO - Fetching prices for META from 2023-01-01 to 2025-11-01
+2025-12-30 16:15:06,655 - __main__ - INFO - Successfully fetched 711 days of price data for META
+2025-12-30 16:15:06,656 - utils.error_handler - INFO - fetch_historical_prices completed successfully in 0.18s
+2025-12-30 16:15:06,660 - __main__ - INFO - Saved price data to data\raw\prices\META_prices.csv
+2025-12-30 16:15:06,823 - utils.error_handler - INFO - Starting fetch_company_info with args=(<__main__.StockPriceCollector object at 0x000001500E109220>, 'META'), kwargs=[]
+2025-12-30 16:15:06,823 - __main__ - INFO - Fetching company info for META
+2025-12-30 16:15:07,036 - __main__ - INFO - Successfully fetched info for META
+2025-12-30 16:15:07,037 - utils.error_handler - INFO - fetch_company_info completed successfully in 0.21s
+2025-12-30 16:15:07,048 - __main__ - INFO - Saved company info to data\raw\prices\META_info.json
+2025-12-30 16:15:07,049 - __main__ - INFO - Processing TSLA (7/12)
+2025-12-30 16:15:08,657 - utils.error_handler - INFO - Starting fetch_historical_prices with args=(<__main__.StockPriceCollector object at 0x000001500E109220>, 'TSLA'), kwargs=[]
+2025-12-30 16:15:08,657 - __main__ - INFO - Fetching prices for TSLA from 2023-01-01 to 2025-11-01
+2025-12-30 16:15:08,814 - __main__ - INFO - Successfully fetched 711 days of price data for TSLA
+2025-12-30 16:15:08,815 - utils.error_handler - INFO - fetch_historical_prices completed successfully in 0.16s
+2025-12-30 16:15:08,822 - __main__ - INFO - Saved price data to data\raw\prices\TSLA_prices.csv
+2025-12-30 16:15:09,037 - utils.error_handler - INFO - Starting fetch_company_info with args=(<__main__.StockPriceCollector object at 0x000001500E109220>, 'TSLA'), kwargs=[]
+2025-12-30 16:15:09,037 - __main__ - INFO - Fetching company info for TSLA
+2025-12-30 16:15:09,241 - __main__ - INFO - Successfully fetched info for TSLA
+2025-12-30 16:15:09,242 - utils.error_handler - INFO - fetch_company_info completed successfully in 0.20s
+2025-12-30 16:15:09,254 - __main__ - INFO - Saved company info to data\raw\prices\TSLA_info.json
+2025-12-30 16:15:09,255 - __main__ - INFO - Processing JPM (8/12)
+2025-12-30 16:15:10,815 - utils.error_handler - INFO - Starting fetch_historical_prices with args=(<__main__.StockPriceCollector object at 0x000001500E109220>, 'JPM'), kwargs=[]
+2025-12-30 16:15:10,816 - __main__ - INFO - Fetching prices for JPM from 2023-01-01 to 2025-11-01
+2025-12-30 16:15:11,122 - __main__ - INFO - Successfully fetched 711 days of price data for JPM
+2025-12-30 16:15:11,122 - utils.error_handler - INFO - fetch_historical_prices completed successfully in 0.31s
+2025-12-30 16:15:11,127 - __main__ - INFO - Saved price data to data\raw\prices\JPM_prices.csv
+2025-12-30 16:15:11,244 - utils.error_handler - INFO - Starting fetch_company_info with args=(<__main__.StockPriceCollector object at 0x000001500E109220>, 'JPM'), kwargs=[]
+2025-12-30 16:15:11,244 - __main__ - INFO - Fetching company info for JPM
+2025-12-30 16:15:11,485 - __main__ - INFO - Successfully fetched info for JPM
+2025-12-30 16:15:11,486 - utils.error_handler - INFO - fetch_company_info completed successfully in 0.24s
+2025-12-30 16:15:11,488 - __main__ - INFO - Saved company info to data\raw\prices\JPM_info.json
+2025-12-30 16:15:11,490 - __main__ - INFO - Processing SPY (9/12)
+2025-12-30 16:15:13,123 - utils.error_handler - INFO - Starting fetch_historical_prices with args=(<__main__.StockPriceCollector object at 0x000001500E109220>, 'SPY'), kwargs=[]
+2025-12-30 16:15:13,123 - __main__ - INFO - Fetching prices for SPY from 2023-01-01 to 2025-11-01
+2025-12-30 16:15:13,363 - __main__ - INFO - Successfully fetched 711 days of price data for SPY
+2025-12-30 16:15:13,363 - utils.error_handler - INFO - fetch_historical_prices completed successfully in 0.24s
+2025-12-30 16:15:13,377 - __main__ - INFO - Saved price data to data\raw\prices\SPY_prices.csv
+2025-12-30 16:15:13,487 - utils.error_handler - INFO - Starting fetch_company_info with args=(<__main__.StockPriceCollector object at 0x000001500E109220>, 'SPY'), kwargs=[]
+2025-12-30 16:15:13,487 - __main__ - INFO - Fetching company info for SPY
+2025-12-30 16:15:13,701 - __main__ - INFO - Successfully fetched info for SPY
+2025-12-30 16:15:13,702 - utils.error_handler - INFO - fetch_company_info completed successfully in 0.21s
+2025-12-30 16:15:13,713 - __main__ - INFO - Saved company info to data\raw\prices\SPY_info.json
+2025-12-30 16:15:13,714 - __main__ - INFO - Processing GOOGL (10/12)
+2025-12-30 16:15:15,364 - utils.error_handler - INFO - Starting fetch_historical_prices with args=(<__main__.StockPriceCollector object at 0x000001500E109220>, 'GOOGL'), kwargs=[]
+2025-12-30 16:15:15,364 - __main__ - INFO - Fetching prices for GOOGL from 2023-01-01 to 2025-11-01
+2025-12-30 16:15:15,461 - __main__ - INFO - Successfully fetched 711 days of price data for GOOGL
+2025-12-30 16:15:15,461 - utils.error_handler - INFO - fetch_historical_prices completed successfully in 0.10s
+2025-12-30 16:15:15,465 - __main__ - INFO - Saved price data to data\raw\prices\GOOGL_prices.csv
+2025-12-30 16:15:15,702 - utils.error_handler - INFO - Starting fetch_company_info with args=(<__main__.StockPriceCollector object at 0x000001500E109220>, 'GOOGL'), kwargs=[]
+2025-12-30 16:15:15,702 - __main__ - INFO - Fetching company info for GOOGL
+2025-12-30 16:15:15,919 - __main__ - INFO - Successfully fetched info for GOOGL
+2025-12-30 16:15:15,919 - utils.error_handler - INFO - fetch_company_info completed successfully in 0.22s
+2025-12-30 16:15:15,921 - __main__ - INFO - Saved company info to data\raw\prices\GOOGL_info.json
+2025-12-30 16:15:15,923 - __main__ - INFO - Processing AMD (11/12)
+2025-12-30 16:15:17,462 - utils.error_handler - INFO - Starting fetch_historical_prices with args=(<__main__.StockPriceCollector object at 0x000001500E109220>, 'AMD'), kwargs=[]
+2025-12-30 16:15:17,462 - __main__ - INFO - Fetching prices for AMD from 2023-01-01 to 2025-11-01
+2025-12-30 16:15:17,629 - __main__ - INFO - Successfully fetched 711 days of price data for AMD
+2025-12-30 16:15:17,629 - utils.error_handler - INFO - fetch_historical_prices completed successfully in 0.17s
+2025-12-30 16:15:17,644 - __main__ - INFO - Saved price data to data\raw\prices\AMD_prices.csv
+2025-12-30 16:15:17,921 - utils.error_handler - INFO - Starting fetch_company_info with args=(<__main__.StockPriceCollector object at 0x000001500E109220>, 'AMD'), kwargs=[]
+2025-12-30 16:15:17,921 - __main__ - INFO - Fetching company info for AMD
+2025-12-30 16:15:18,193 - __main__ - INFO - Successfully fetched info for AMD
+2025-12-30 16:15:18,194 - utils.error_handler - INFO - fetch_company_info completed successfully in 0.27s
+2025-12-30 16:15:18,196 - __main__ - INFO - Saved company info to data\raw\prices\AMD_info.json
+2025-12-30 16:15:18,197 - __main__ - INFO - Processing IWM (12/12)
+2025-12-30 16:15:19,630 - utils.error_handler - INFO - Starting fetch_historical_prices with args=(<__main__.StockPriceCollector object at 0x000001500E109220>, 'IWM'), kwargs=[]
+2025-12-30 16:15:19,631 - __main__ - INFO - Fetching prices for IWM from 2023-01-01 to 2025-11-01
+2025-12-30 16:15:19,863 - __main__ - INFO - Successfully fetched 711 days of price data for IWM
+2025-12-30 16:15:19,864 - utils.error_handler - INFO - fetch_historical_prices completed successfully in 0.23s
+2025-12-30 16:15:19,868 - __main__ - INFO - Saved price data to data\raw\prices\IWM_prices.csv
+2025-12-30 16:15:20,195 - utils.error_handler - INFO - Starting fetch_company_info with args=(<__main__.StockPriceCollector object at 0x000001500E109220>, 'IWM'), kwargs=[]
+2025-12-30 16:15:20,195 - __main__ - INFO - Fetching company info for IWM
+2025-12-30 16:15:20,513 - __main__ - INFO - Successfully fetched info for IWM
+2025-12-30 16:15:20,514 - utils.error_handler - INFO - fetch_company_info completed successfully in 0.32s
+2025-12-30 16:15:20,525 - __main__ - INFO - Saved company info to data\raw\prices\IWM_info.json
+2025-12-30 16:15:20,525 - __main__ - INFO - Completed: 12/12 tickers successful

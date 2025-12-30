@@ -198,7 +198,7 @@ def main():
     collector = StockPriceCollector()
     
     # Test with single ticker
-    tickers = ['AAPL', 'MSFT', 'GOOGL']
+    tickers = ['AAPL', 'MSFT', 'NVDA', 'AMZN', 'QQQ', 'META', 'TSLA', 'JPM', 'SPY', 'GOOGL', 'AMD', 'IWM']
     start_date = '2023-01-01'
     end_date = '2025-11-01'
     
