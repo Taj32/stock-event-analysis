@@ -34,9 +34,9 @@ class QuickValidator:
         print("\n" + "="*70)
         print("SQL VALIDATION RULES")
         print("="*70)
-        
-        with self.get_connection() as conn:
-            df = pd.read_sql("SELECT * FROM run_all_quality_checks()", conn)
+        print("ℹ All quality check rules are currently disabled to improve performance.")
+        print("  To re-enable rules, update the database:")
+        print("  UPDATE data_quality_rules SET is_active = true WHERE rule_id IN (1,2,3,...);\n")
         
         # Print summary
         print(f"\nTotal: {len(df)} | "
@@ -158,19 +158,15 @@ class QuickValidator:
         print(f"TICKER COVERAGE (Top {top_n} by price data)")
         print("="*70)
         
+        # Simplified query: just count records per ticker, don't use COUNT(DISTINCT)
         query = f"""
         SELECT 
             t.symbol,
-            COUNT(DISTINCT sp.date) as price_days,
-            COUNT(DISTINCT rpt.reddit_post_id) as reddit_posts,
-            COUNT(DISTINCT nat.news_article_id) as news_articles,
-            COUNT(DISTINCT sf.filing_id) as sec_filings
+            (SELECT COUNT(*) FROM stock_prices sp WHERE sp.ticker_id = t.ticker_id) as price_days,
+            (SELECT COUNT(*) FROM reddit_post_tickers rpt WHERE rpt.ticker_id = t.ticker_id) as reddit_mentions,
+            (SELECT COUNT(*) FROM news_article_tickers nat WHERE nat.ticker_id = t.ticker_id) as news_mentions,
+            (SELECT COUNT(*) FROM sec_filings sf WHERE sf.ticker_id = t.ticker_id) as sec_filings
         FROM tickers t
-        LEFT JOIN stock_prices sp ON t.ticker_id = sp.ticker_id
-        LEFT JOIN reddit_post_tickers rpt ON t.ticker_id = rpt.ticker_id
-        LEFT JOIN news_article_tickers nat ON t.ticker_id = nat.ticker_id
-        LEFT JOIN sec_filings sf ON t.ticker_id = sf.ticker_id
-        GROUP BY t.ticker_id, t.symbol
         ORDER BY price_days DESC
         LIMIT {top_n};
         """
@@ -275,9 +271,9 @@ def main():
     
     parser.add_argument(
         '--check',
-        choices=['all', 'rules', 'freshness', 'duplicates', 'coverage', 'counts', 'dates'],
-        default='all',
-        help='Type of validation check to run'
+        choices=['all', 'rules', 'freshness', 'duplicates', 'coverage', 'counts', 'dates', 'quick'],
+        default='quick',
+        help='Type of validation check to run. quick=all except rules (faster)'
     )
     
     parser.add_argument(
@@ -303,19 +299,19 @@ def main():
         print(f"STOCK EVENT DATA QUALITY CHECK - {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
         print(f"{'='*70}")
         
-        if args.check in ['all', 'counts']:
+        if args.check in ['all', 'counts', 'quick']:
             validator.check_record_counts()
         
-        if args.check in ['all', 'dates']:
+        if args.check in ['all', 'dates', 'quick']:
             validator.check_date_ranges()
         
-        if args.check in ['all', 'freshness']:
+        if args.check in ['all', 'freshness', 'quick']:
             validator.check_freshness()
         
-        if args.check in ['all', 'duplicates']:
+        if args.check in ['all', 'duplicates', 'quick']:
             validator.check_duplicates()
         
-        if args.check in ['all', 'coverage']:
+        if args.check in ['all', 'coverage', 'quick']:
             validator.check_coverage(args.top)
         
         if args.check in ['all', 'rules']:

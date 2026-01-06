@@ -3,6 +3,7 @@ Data Quality Validation Scripts
 Validates data across all sources and generates detailed reports
 """
 
+import os
 import pandas as pd
 import numpy as np
 from datetime import datetime, timedelta
@@ -11,6 +12,9 @@ from psycopg2.extras import RealDictCursor
 import json
 from typing import Dict, List, Tuple
 import logging
+from dotenv import load_dotenv
+load_dotenv()
+
 
 # Configure logging
 logging.basicConfig(
@@ -462,9 +466,17 @@ class DataQualityValidator:
 def main():
     """Main execution function"""
     
+    DB_CONFIG = {
+        'dbname': os.getenv('DB_NAME'),
+        'user': os.getenv('DB_USER'),
+        'password': os.getenv('DB_PASSWORD'),
+        'host': os.getenv('DB_HOST'),
+        'port': os.getenv('DB_PORT')
+    }
+    
     # Database connection string
     # Modify this with your actual connection details
-    conn_string = "postgresql://username:password@localhost:5432/stock_events_db"
+    conn_string = f"postgresql://{DB_CONFIG['user']}:{DB_CONFIG['password']}@{DB_CONFIG['host']}:{DB_CONFIG['port']}/{DB_CONFIG['dbname']}"
     
     # Initialize validator
     validator = DataQualityValidator(conn_string)
